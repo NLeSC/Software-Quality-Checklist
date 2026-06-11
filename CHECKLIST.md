@@ -1,4 +1,4 @@
-# Level 1
+# Level 1 Essentials
 
 Minimal requirements, should always be done:
 
@@ -18,7 +18,8 @@ Minimal requirements, should always be done:
 For NLESC projects:
 
 - [ ] Registered on the RSD as a project output
-# Level 2
+      
+# Level 2 Advanced
 
 - [ ] Versioning:
 	- [ ] Regular releases
@@ -55,7 +56,8 @@ For NLESC projects:
 For NLESC projects:
 
 - [ ] Registered on the RSD with a full software page and linked to relevant project pages
-# Level 3
+      
+# Level 3 Professional 
 
 - [ ] Published in package manager and/or container registry
 - [ ] Developer documentation:
