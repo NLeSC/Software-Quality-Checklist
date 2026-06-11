@@ -15,7 +15,7 @@ Minimal requirements, should always be done:
 - [ ] Basic usage & installation instructions (e.g. in README.md)
 - [ ] Use of AI clearly specified (i.e.,  using the AI declaration format)
 
-For NLESC projects:
+For NLeSC projects:
 
 - [ ] Registered on the RSD as a project output
       
@@ -53,7 +53,7 @@ For NLESC projects:
 	- [ ] Clear contribution instructions (e.g., CONTRIBUTION.md)
 	- [ ] Clear code of conduct (e.g., CODE_OF_CONDUCT.md)
 
-For NLESC projects:
+For NLeSC projects:
 
 - [ ] Registered on the RSD with a full software page and linked to relevant project pages
       
