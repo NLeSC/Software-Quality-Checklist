@@ -1,0 +1,1164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Software Quality Assessment</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #ffffff;
+  --bg2: #f6f7f9;
+  --bg3: #eef0f4;
+  --text: #1a1d23;
+  --text2: #5a6175;
+  --text3: #9099ad;
+  --border: #e2e5ec;
+  --border2: #c8cdd9;
+  --teal: #0f7b6c;
+  --teal-bg: #e6f4f1;
+  --teal-text: #0a5046;
+  --blue: #1a5fb4;
+  --blue-bg: #e8f0fb;
+  --blue-text: #153e82;
+  --amber: #9a5f00;
+  --amber-bg: #fef3e2;
+  --amber-text: #6b4000;
+  --red-bg: #fdecea;
+  --red-text: #8b1a1a;
+  --green-bg: #e8f5e9;
+  --green-text: #1b5e20;
+  --na-bg: #f0f1f4;
+  --na-text: #5a6175;
+  --radius: 8px;
+  --radius-sm: 5px;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  color: var(--text);
+  background: var(--bg2);
+  line-height: 1.5;
+}
+
+.app {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 24px 20px 60px;
+}
+
+/* ── Header ── */
+.site-header {
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+.site-header h1 {
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.3px;
+  margin-bottom: 3px;
+}
+.site-header p { font-size: 13px; color: var(--text2); }
+
+/* ── Tabs ── */
+.tabs {
+  display: flex;
+  gap: 2px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid var(--border);
+}
+.tab-btn {
+  padding: 9px 18px;
+  font-size: 13px;
+  font-weight: 500;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  color: var(--text2);
+  margin-bottom: -1px;
+  transition: color 0.15s;
+}
+.tab-btn:hover { color: var(--text); }
+.tab-btn.active { color: var(--text); border-bottom-color: var(--text); }
+
+/* ── Panels ── */
+.panel { display: none; }
+.panel.active { display: block; }
+
+/* ── Meta section ── */
+.meta-card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px 18px;
+  margin-bottom: 20px;
+}
+.meta-card h2 {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text2);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 12px;
+}
+.meta-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.meta-field label {
+  display: block;
+  font-size: 12px;
+  color: var(--text2);
+  margin-bottom: 4px;
+  font-weight: 500;
+}
+.meta-field input, .meta-field textarea {
+  width: 100%;
+  padding: 7px 10px;
+  font-size: 13px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg2);
+  color: var(--text);
+  font-family: inherit;
+  transition: border-color 0.15s;
+}
+.meta-field input:focus, .meta-field textarea:focus {
+  outline: none;
+  border-color: var(--border2);
+  background: var(--bg);
+}
+.meta-field textarea { resize: vertical; min-height: 52px; }
+.meta-full { grid-column: 1 / -1; }
+
+/* ── Progress bar ── */
+.progress-strip {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 20px;
+}
+.prog-card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+}
+.prog-card .pc-tier {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  margin-bottom: 2px;
+}
+.prog-card .pc-score {
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1.2;
+  margin-bottom: 2px;
+}
+.prog-card .pc-of {
+  font-size: 11px;
+  color: var(--text2);
+  margin-bottom: 6px;
+}
+.pbar { height: 3px; background: var(--bg3); border-radius: 2px; }
+.pfill { height: 3px; border-radius: 2px; transition: width 0.4s ease; }
+.pfill-e { background: var(--teal); }
+.pfill-a { background: var(--blue); }
+.pfill-p { background: var(--amber); }
+
+.tier-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.tier-essential { background: var(--teal-bg); color: var(--teal-text); }
+.tier-advanced   { background: var(--blue-bg); color: var(--blue-text); }
+.tier-professional { background: var(--amber-bg); color: var(--amber-text); }
+.tier-none { background: var(--bg3); color: var(--text2); }
+
+/* ── Action bar ── */
+.action-bar {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+.btn {
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: 500;
+  border: 1px solid var(--border2);
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+  color: var(--text);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: background 0.1s;
+}
+.btn:hover { background: var(--bg2); }
+.btn-primary { background: var(--text); color: var(--bg); border-color: var(--text); }
+.btn-primary:hover { background: #2c3040; }
+
+/* ── Level blocks ── */
+.level-section { margin-bottom: 12px; }
+
+.level-toggle {
+  width: 100%;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 13px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.1s;
+  font-family: inherit;
+}
+.level-toggle:hover { background: var(--bg2); }
+.level-toggle[aria-expanded="true"] {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  border-bottom-color: transparent;
+}
+.level-toggle .lt-title { font-size: 14px; font-weight: 600; flex: 1; }
+.level-toggle .lt-desc { font-size: 12px; color: var(--text2); }
+.level-toggle .lt-arrow {
+  font-size: 11px;
+  color: var(--text3);
+  transition: transform 0.2s;
+}
+.level-toggle[aria-expanded="true"] .lt-arrow { transform: rotate(180deg); }
+.level-toggle .lt-score {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 2px 9px;
+  border-radius: 20px;
+}
+.score-e { background: var(--teal-bg); color: var(--teal-text); }
+.score-a { background: var(--blue-bg); color: var(--blue-text); }
+.score-p { background: var(--amber-bg); color: var(--amber-text); }
+
+.level-body {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-top: none;
+  border-bottom-left-radius: var(--radius);
+  border-bottom-right-radius: var(--radius);
+  padding: 4px 0 10px;
+  display: none;
+}
+.level-body.open { display: block; }
+
+/* ── Group headers ── */
+.group-header {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text3);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  padding: 12px 16px 4px;
+  border-top: 1px solid var(--border);
+  margin-top: 6px;
+}
+.group-header:first-child { border-top: none; margin-top: 0; }
+
+/* ── Indicators ── */
+.indicator {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+  align-items: start;
+  padding: 7px 16px;
+  transition: background 0.1s;
+}
+.indicator:hover { background: var(--bg2); }
+.ind-label { font-size: 13px; line-height: 1.4; }
+.ind-sub { font-size: 12px; color: var(--text2); margin-top: 2px; }
+.nlesc-tag {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 1px 6px;
+  border-radius: 20px;
+  background: var(--blue-bg);
+  color: var(--blue-text);
+  margin-left: 6px;
+  vertical-align: middle;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* Note field — inline, always visible for indicators that support it */
+.ind-note {
+  margin-top: 5px;
+}
+.ind-note input {
+  width: 100%;
+  padding: 5px 8px;
+  font-size: 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg2);
+  color: var(--text);
+  font-family: inherit;
+}
+.ind-note input:focus { outline: none; border-color: var(--border2); background: var(--bg); }
+.ind-note label { font-size: 11px; color: var(--text3); display: block; margin-bottom: 3px; }
+
+/* Toggle buttons */
+.toggle-group { display: flex; gap: 3px; align-items: center; flex-shrink: 0; padding-top: 1px; }
+.tgl {
+  padding: 4px 9px;
+  font-size: 12px;
+  font-weight: 500;
+  border: 1px solid var(--border2);
+  border-radius: 20px;
+  background: none;
+  color: var(--text2);
+  cursor: pointer;
+  transition: all 0.1s;
+  white-space: nowrap;
+  font-family: inherit;
+}
+.tgl:hover { background: var(--bg2); color: var(--text); }
+.tgl.yes.active  { background: var(--green-bg); border-color: #4caf50; color: var(--green-text); }
+.tgl.no.active   { background: var(--red-bg);   border-color: #e57373; color: var(--red-text); }
+.tgl.na.active   { background: var(--na-bg);    border-color: var(--border2);  color: var(--na-text); }
+
+/* ── Report ── */
+.report-hero {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px 22px;
+  margin-bottom: 20px;
+}
+.report-hero h2 { font-size: 22px; font-weight: 700; letter-spacing: -0.3px; margin-bottom: 3px; }
+.report-hero .rh-meta { font-size: 12px; color: var(--text2); margin-bottom: 14px; }
+.report-score-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-top: 14px;
+}
+.rsc {
+  background: var(--bg2);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+}
+.rsc .rsc-label { font-size: 11px; color: var(--text2); margin-bottom: 2px; }
+.rsc .rsc-pct { font-size: 20px; font-weight: 700; }
+.rsc .rsc-sub { font-size: 11px; color: var(--text2); }
+
+/* Report categories */
+.report-section { margin-bottom: 10px; }
+.rep-cat-toggle {
+  width: 100%;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 11px 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  text-align: left;
+  font-family: inherit;
+  transition: background 0.1s;
+}
+.rep-cat-toggle:hover { background: var(--bg2); }
+.rep-cat-toggle[aria-expanded="true"] {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  border-bottom-color: transparent;
+}
+.rct-name { font-size: 13px; font-weight: 600; flex: 1; }
+.rct-bar {
+  width: 100px;
+  height: 6px;
+  background: var(--bg3);
+  border-radius: 3px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.rct-fill { height: 100%; border-radius: 3px; }
+.rct-score { font-size: 12px; font-weight: 600; color: var(--text2); min-width: 44px; text-align: right; }
+.rct-arrow { font-size: 10px; color: var(--text3); transition: transform 0.2s; }
+.rep-cat-toggle[aria-expanded="true"] .rct-arrow { transform: rotate(180deg); }
+
+.rep-cat-body {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-top: none;
+  border-bottom-left-radius: var(--radius);
+  border-bottom-right-radius: var(--radius);
+  padding: 4px 0 8px;
+  display: none;
+}
+.rep-cat-body.open { display: block; }
+
+.rep-ind {
+  display: grid;
+  grid-template-columns: 52px 1fr;
+  gap: 8px;
+  align-items: baseline;
+  padding: 6px 14px;
+  font-size: 13px;
+  border-bottom: 1px solid var(--border);
+}
+.rep-ind:last-child { border-bottom: none; }
+.ri-pill {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  text-align: center;
+}
+.rip-yes  { background: var(--green-bg); color: var(--green-text); }
+.rip-no   { background: var(--red-bg);   color: var(--red-text); }
+.rip-na   { background: var(--na-bg);    color: var(--na-text); }
+.rip-open { background: var(--bg3);      color: var(--text3); }
+.ri-note-text { font-size: 12px; color: var(--text2); display: block; margin-top: 1px; font-style: italic; }
+
+/* ── JSON panel ── */
+.json-out {
+  width: 100%;
+  min-height: 400px;
+  font-size: 12px;
+  font-family: "SFMono-Regular", Consolas, monospace;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px;
+  background: var(--bg);
+  color: var(--text);
+  resize: vertical;
+}
+.json-out:focus { outline: none; border-color: var(--border2); }
+
+.import-area {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+}
+.import-area h3 { font-size: 13px; font-weight: 600; margin-bottom: 8px; }
+.import-area textarea {
+  width: 100%;
+  min-height: 90px;
+  font-size: 12px;
+  font-family: "SFMono-Regular", Consolas, monospace;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px;
+  background: var(--bg2);
+  color: var(--text);
+  resize: vertical;
+  margin-bottom: 8px;
+}
+.import-area textarea:focus { outline: none; border-color: var(--border2); }
+
+/* Reach banner */
+.reach-banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 14px;
+  border-radius: var(--radius-sm);
+  margin-bottom: 16px;
+  font-size: 13px;
+  font-weight: 600;
+}
+.reach-banner.tier-essential { background: var(--teal-bg); color: var(--teal-text); border: 1px solid #9fd3c7; }
+.reach-banner.tier-advanced   { background: var(--blue-bg); color: var(--blue-text); border: 1px solid #a8c4ec; }
+.reach-banner.tier-professional { background: var(--amber-bg); color: var(--amber-text); border: 1px solid #f3c97a; }
+.reach-banner.tier-none { background: var(--bg3); color: var(--text2); border: 1px solid var(--border2); }
+
+/* Toast */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: var(--text);
+  color: var(--bg);
+  padding: 10px 18px;
+  border-radius: var(--radius);
+  font-size: 13px;
+  font-weight: 500;
+  opacity: 0;
+  transition: opacity 0.2s;
+  pointer-events: none;
+  z-index: 9999;
+}
+.toast.show { opacity: 1; }
+
+/* ── Print styles ── */
+@media print {
+  body { background: white; }
+  .app { padding: 0; }
+  .tabs, .action-bar, .tab-btn, .toast { display: none !important; }
+  .panel { display: block !important; }
+  #panel-form { display: none !important; }
+  #panel-json { display: none !important; }
+  .rep-cat-body { display: block !important; }
+  .rep-cat-toggle .rct-arrow { display: none; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="site-header">
+    <h1>Software quality assessment</h1>
+    <p>Netherlands eScience Center · Research software quality checklist</p>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="showTab('form')" id="tab-form">Assess</button>
+    <button class="tab-btn" onclick="showTab('report')" id="tab-report">Report</button>
+    <button class="tab-btn" onclick="showTab('json')" id="tab-json">JSON</button>
+  </div>
+
+  <!-- ═══════════════ FORM PANEL ═══════════════ -->
+  <div class="panel active" id="panel-form">
+    <div class="meta-card">
+      <h2>Software details</h2>
+      <div class="meta-grid">
+        <div class="meta-field">
+          <label for="m-name">Name</label>
+          <input id="m-name" type="text" placeholder="e.g., MyResearchTool" oninput="setMeta('name',this.value)">
+        </div>
+        <div class="meta-field">
+          <label for="m-ver">Version</label>
+          <input id="m-ver" type="text" placeholder="e.g., 1.2.0" oninput="setMeta('version',this.value)">
+        </div>
+        <div class="meta-field">
+          <label for="m-repo">Repository URL</label>
+          <input id="m-repo" type="text" placeholder="https://github.com/org/repo" oninput="setMeta('repo',this.value)">
+        </div>
+        <div class="meta-field">
+          <label for="m-assessor">Assessor</label>
+          <input id="m-assessor" type="text" placeholder="Your name" oninput="setMeta('assessor',this.value)">
+        </div>
+        <div class="meta-field">
+          <label for="m-date">Date</label>
+          <input id="m-date" type="date" oninput="setMeta('date',this.value)">
+        </div>
+        <div class="meta-field">
+          <label for="m-notes">Notes</label>
+          <textarea id="m-notes" placeholder="Any overall context or remarks…" oninput="setMeta('notes',this.value)"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="progress-strip" id="progress-strip"><!-- filled by JS --></div>
+
+    <div class="action-bar">
+      <button class="btn btn-primary" onclick="downloadJSON()">&#8595; Export JSON</button>
+      <button class="btn" onclick="showTab('report')">View report &rarr;</button>
+      <label class="btn" style="cursor:pointer" title="Load a previously saved assessment JSON">&#8593; Load JSON <input type="file" accept=".json,application/json" style="display:none" onchange="handleFileUpload(this)"></label>
+      <button class="btn" style="color:var(--text3);border-style:dashed" title="Coming soon: auto-populate from a repository URL or codemeta.json file" disabled>&#10022; Import from repo <span style="font-size:11px;margin-left:4px;opacity:0.7">(coming soon)</span></button>
+    </div>
+
+    <div id="checklist-sections"><!-- filled by JS --></div>
+  </div>
+
+  <!-- ═══════════════ REPORT PANEL ═══════════════ -->
+  <div class="panel" id="panel-report">
+    <div class="action-bar">
+      <button class="btn" onclick="showTab('form')">&larr; Back to form</button>
+      <button class="btn btn-primary" onclick="downloadJSON()">&#8595; Export JSON</button>
+      <button class="btn" onclick="window.print()" title="Opens browser print dialog — choose 'Save as PDF' to export">&#9113; Print / save as PDF</button>
+    </div>
+    <div id="report-content"><!-- filled by JS --></div>
+  </div>
+
+  <!-- ═══════════════ JSON PANEL ═══════════════ -->
+  <div class="panel" id="panel-json">
+    <div class="action-bar">
+      <button class="btn btn-primary" onclick="downloadJSON()">&#8595; Download JSON</button>
+      <button class="btn" onclick="copyJSON()">&#9112; Copy</button>
+    </div>
+    <textarea class="json-out" id="json-out" readonly spellcheck="false"></textarea>
+    <div class="import-area">
+      <h3>Load from JSON</h3>
+      <div style="display:flex;gap:8px;margin-bottom:10px">
+        <label class="btn" style="cursor:pointer">&#8593; Upload file <input type="file" accept=".json,application/json" style="display:none" onchange="handleFileUpload(this)"></label>
+        <span style="font-size:12px;color:var(--text3);align-self:center">or paste below</span>
+      </div>
+      <textarea id="json-import" placeholder="Paste a previously exported JSON here to reload an assessment…" spellcheck="false"></textarea>
+      <button class="btn" onclick="loadJSON(document.getElementById('json-import').value)">&#8593; Load from paste</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ─────────────────────────────────────────────
+//  DATA
+// ─────────────────────────────────────────────
+
+const TIERS = [
+  {
+    id: "essential",
+    label: "Essential",
+    colorClass: "tier-essential",
+    scoreClass: "score-e",
+    fillClass: "pfill-e",
+    description: "Analysis code, scripts — baseline for FAIR and reproducible research",
+    groups: [
+      { label: "Version control & visibility", items: [
+        { id: "version_control", label: "Uses version control", link: "Repository URL" },
+        { id: "public_repo",     label: "Uses a public repository" },
+      ]},
+      { label: "License", items: [
+        { id: "has_license",    label: "Has a license" },
+        { id: "osi_license",    label: "Open source license (OSI approved)", sub: "See opensource.org/licenses" },
+        { id: "deps_specified", label: "Dependencies clearly specified" },
+        { id: "license_compat", label: "Dependency licenses compatible with chosen license" },
+      ]},
+      { label: "Archiving & identity", items: [
+        { id: "archived",       label: "Archived in a scholarly repository", sub: "Zenodo, 4TU, Software Heritage", link: "Archive URL / identifier" },
+        { id: "persistent_id",  label: "Has a persistent identifier", sub: "DOI, SWHID, etc.", link: "DOI or SWHID" },
+        { id: "metadata",       label: "Has descriptive metadata", sub: "CITATION.cff or CodeMeta", link: "Metadata file URL" },
+      ]},
+      { label: "Documentation", items: [
+        { id: "purpose",        label: "Explanation of purpose", sub: "e.g., in README.md" },
+        { id: "usage_install",  label: "Basic usage & installation instructions" },
+      ]},
+      { label: "AI use", items: [
+        { id: "ai_declared",    label: "Use of AI clearly specified", sub: "Using the AI declaration format" },
+      ]},
+      { label: "NLeSC projects", items: [
+        { id: "rsd_l1",         label: "Registered on the RSD as a project output", nlesc: true, link: "RSD URL" },
+      ]},
+    ]
+  },
+  {
+    id: "advanced",
+    label: "Advanced",
+    colorClass: "tier-advanced",
+    scoreClass: "score-a",
+    fillClass: "pfill-a",
+    description: "Prototype tools, reusable packages — actively developed and shared",
+    groups: [
+      { label: "Versioning", items: [
+        { id: "regular_releases",   label: "Regular releases" },
+        { id: "versioning_scheme",  label: "Uses a versioning scheme", sub: "Semantic or calendar versioning" },
+        { id: "version_ids",        label: "Versions have distinct persistent identifiers" },
+        { id: "changelog",          label: "Changelog is maintained", link: "Changelog URL" },
+      ]},
+      { label: "Dependency management", items: [
+        { id: "dep_mgmt",     label: "Dependency management solution in use", sub: "npm, PyPI, Maven, etc." },
+        { id: "dep_versions", label: "Dependency versions explicitly stated" },
+        { id: "external_deps",label: "External APIs, services, hardware clearly specified" },
+      ]},
+      { label: "Testing", items: [
+        { id: "linting",     label: "Static analysis / linting" },
+        { id: "unit_tests",  label: "Unit tests" },
+        { id: "ci",          label: "Continuous integration", link: "CI URL" },
+        { id: "auto_tests",  label: "Automated tests with sufficient coverage" },
+        { id: "e2e_tests",   label: "End-to-end testing" },
+      ]},
+      { label: "Security", items: [
+        { id: "no_vulns",        label: "No known critical vulnerabilities" },
+        { id: "no_leaked_creds", label: "No leaked credentials in the codebase", sub: "No secrets or API tokens" },
+      ]},
+      { label: "Documentation", items: [
+        { id: "user_docs",  label: "User documentation", link: "Docs URL" },
+        { id: "dev_docs",   label: "Developer documentation" },
+        { id: "code_docs",  label: "Code-level documentation" },
+        { id: "tutorials",  label: "Tutorial or examples", link: "Examples URL" },
+        { id: "quickstart", label: "Quick start guide" },
+      ]},
+      { label: "Development practices", items: [
+        { id: "coding_style", label: "Coding style defined and enforced" },
+        { id: "issues",       label: "Issue tracker in use", link: "Issues URL" },
+        { id: "prs",          label: "Pull requests used" },
+      ]},
+      { label: "Community", items: [
+        { id: "community_registry", label: "Listed on a community registry", sub: "RSD, bio.tools, etc.", link: "Registry URL" },
+        { id: "contribution_guide", label: "Contribution instructions documented", sub: "e.g., CONTRIBUTING.md", link: "CONTRIBUTING URL" },
+        { id: "code_of_conduct",    label: "Code of conduct documented", sub: "e.g., CODE_OF_CONDUCT.md" },
+      ]},
+      { label: "NLeSC projects", items: [
+        { id: "rsd_l2", label: "Full RSD page, linked to relevant project pages", nlesc: true, link: "RSD software URL" },
+      ]},
+    ]
+  },
+  {
+    id: "professional",
+    label: "Professional",
+    colorClass: "tier-professional",
+    scoreClass: "score-p",
+    fillClass: "pfill-p",
+    description: "Infrastructure, services — production-grade, mission-critical research software",
+    groups: [
+      { label: "Distribution", items: [
+        { id: "package_registry", label: "Published in package manager or container registry", link: "Package URL" },
+      ]},
+      { label: "Developer documentation", items: [
+        { id: "arch_docs", label: "Architecture and design choices documented" },
+        { id: "api_docs",  label: "API documentation", link: "API docs URL" },
+      ]},
+      { label: "Development practices", items: [
+        { id: "branch_protection", label: "Branch protection enabled" },
+        { id: "code_reviews",      label: "Code reviews practised" },
+        { id: "roadmap",           label: "Roadmap maintained", link: "Roadmap URL" },
+        { id: "milestones",        label: "Milestones used" },
+      ]},
+      { label: "Security", items: [
+        { id: "auto_vuln_checks", label: "Automated vulnerability checks" },
+        { id: "security_policy",  label: "Security policy documented", sub: "e.g., SECURITY.md" },
+      ]},
+      { label: "Community", items: [
+        { id: "comm_channel", label: "Community communication channel exists", sub: "Slack, Discourse, etc.", link: "Channel URL" },
+        { id: "bus_factor",   label: "Sufficiently high bus factor", sub: "Both for developers and organisations" },
+      ]},
+      { label: "Governance", items: [
+        { id: "governance", label: "Governance model documented", sub: "e.g., GOVERNANCE.md" },
+      ]},
+    ]
+  }
+];
+
+// ─────────────────────────────────────────────
+//  STATE
+// ─────────────────────────────────────────────
+
+const state = {
+  meta: {
+    name: "", version: "", repo: "", assessor: "",
+    date: new Date().toISOString().split("T")[0], notes: ""
+  },
+  responses: {} // { [indicatorId]: { status: "yes"|"no"|"na"|null, note: "" } }
+};
+
+// Set today's date in the input
+document.getElementById("m-date").value = state.meta.date;
+
+function setMeta(key, val) {
+  state.meta[key] = val;
+  refreshProgress();
+  if (document.getElementById("panel-json").classList.contains("active")) refreshJSON();
+}
+
+function setResponse(id, field, val) {
+  if (!state.responses[id]) state.responses[id] = { status: null, note: "" };
+  // Toggle off if clicking same status
+  if (field === "status" && state.responses[id].status === val) {
+    state.responses[id].status = null;
+  } else {
+    state.responses[id][field] = val;
+  }
+  refreshToggleRow(id);
+  refreshProgress();
+  if (document.getElementById("panel-json").classList.contains("active")) refreshJSON();
+}
+
+// ─────────────────────────────────────────────
+//  SCORING
+// ─────────────────────────────────────────────
+
+function getItems(tier) {
+  return tier.groups.flatMap(g => g.items);
+}
+
+function scoreForTier(tier) {
+  const items = getItems(tier);
+  const applicable = items.filter(i => {
+    const r = state.responses[i.id];
+    return !r || r.status !== "na";
+  });
+  const yes = applicable.filter(i => state.responses[i.id] && state.responses[i.id].status === "yes");
+  return { applicable: applicable.length, yes: yes.length, total: items.length };
+}
+
+function computeReachLevel() {
+  let reached = null;
+  for (const tier of TIERS) {
+    const s = scoreForTier(tier);
+    if (s.applicable > 0 && s.yes === s.applicable) {
+      reached = tier;
+    } else {
+      break;
+    }
+  }
+  return reached;
+}
+
+// ─────────────────────────────────────────────
+//  BUILD CHECKLIST HTML (once)
+// ─────────────────────────────────────────────
+
+function buildChecklist() {
+  const container = document.getElementById("checklist-sections");
+  let html = "";
+
+  TIERS.forEach((tier, ti) => {
+    const openDefault = ti === 0;
+    html += `
+    <div class="level-section">
+      <button class="level-toggle" id="ltoggle-${tier.id}" aria-expanded="${openDefault}"
+        onclick="toggleLevel('${tier.id}')">
+        <span class="tier-badge ${tier.colorClass}">${tier.label}</span>
+        <span class="lt-title"></span>
+        <span class="lt-desc">${tier.description}</span>
+        <span class="lt-score ${tier.scoreClass}" id="lscore-${tier.id}">0 / 0</span>
+        <span class="lt-arrow">▼</span>
+      </button>
+      <div class="level-body${openDefault ? ' open' : ''}" id="lbody-${tier.id}">`;
+
+    tier.groups.forEach((group, gi) => {
+      html += `<div class="group-header">${group.label}</div>`;
+      group.items.forEach(item => {
+        html += `
+        <div class="indicator" id="ind-${item.id}">
+          <div>
+            <div class="ind-label">${item.label}${item.nlesc ? '<span class="nlesc-tag">NLeSC</span>' : ''}
+            </div>
+            ${item.sub ? `<div class="ind-sub">${item.sub}</div>` : ""}
+            ${item.link ? `
+            <div class="ind-note">
+              <label for="note-${item.id}">${item.link}</label>
+              <input type="text" id="note-${item.id}" placeholder="Paste link or add a note…"
+                oninput="setResponse('${item.id}','note',this.value)">
+            </div>` : ""}
+          </div>
+          <div class="toggle-group" id="tg-${item.id}">
+            <button class="tgl yes" onclick="setResponse('${item.id}','status','yes')">Yes</button>
+            <button class="tgl no"  onclick="setResponse('${item.id}','status','no')">No</button>
+            <button class="tgl na"  onclick="setResponse('${item.id}','status','na')">N/A</button>
+          </div>
+        </div>`;
+      });
+    });
+
+    html += `</div></div>`;
+  });
+
+  container.innerHTML = html;
+}
+
+function toggleLevel(id) {
+  const btn = document.getElementById("ltoggle-" + id);
+  const body = document.getElementById("lbody-" + id);
+  const expanded = btn.getAttribute("aria-expanded") === "true";
+  btn.setAttribute("aria-expanded", String(!expanded));
+  body.classList.toggle("open", !expanded);
+}
+
+// ─────────────────────────────────────────────
+//  REFRESH (incremental)
+// ─────────────────────────────────────────────
+
+function refreshToggleRow(id) {
+  const r = state.responses[id] || {};
+  const tg = document.getElementById("tg-" + id);
+  if (!tg) return;
+  tg.querySelectorAll(".tgl").forEach(btn => btn.classList.remove("active"));
+  if (r.status) {
+    const active = tg.querySelector(".tgl." + r.status);
+    if (active) active.classList.add("active");
+  }
+}
+
+function refreshProgress() {
+  const strip = document.getElementById("progress-strip");
+  let html = "";
+  TIERS.forEach(tier => {
+    const s = scoreForTier(tier);
+    const pct = s.applicable > 0 ? Math.round(s.yes / s.applicable * 100) : 0;
+    html += `
+    <div class="prog-card">
+      <div class="pc-tier ${tier.scoreClass.replace('score','tier')}" style="color:inherit">${tier.label}</div>
+      <div class="pc-score">${s.yes}<span style="font-size:13px;font-weight:400;color:var(--text2)"> / ${s.applicable}</span></div>
+      <div class="pc-of">applicable indicators</div>
+      <div class="pbar"><div class="${tier.fillClass}" style="width:${pct}%;height:3px;border-radius:2px;transition:width 0.4s"></div></div>
+    </div>`;
+    // Update score badge on section header
+    const badge = document.getElementById("lscore-" + tier.id);
+    if (badge) badge.textContent = s.yes + " / " + s.applicable;
+  });
+  strip.innerHTML = html;
+}
+
+// ─────────────────────────────────────────────
+//  REPORT
+// ─────────────────────────────────────────────
+
+function buildReport() {
+  const reached = computeReachLevel();
+  let html = "";
+
+  // Hero card
+  const name = state.meta.name || "Unnamed software";
+  html += `<div class="report-hero">
+    <h2>${esc(name)}</h2>
+    <div class="rh-meta">`;
+  if (state.meta.version) html += `Version ${esc(state.meta.version)} &nbsp;·&nbsp; `;
+  if (state.meta.assessor) html += `Assessed by ${esc(state.meta.assessor)} &nbsp;·&nbsp; `;
+  if (state.meta.date) html += esc(state.meta.date);
+  html += `</div>`;
+
+  // Encouraging summary: highlight what's been achieved
+  const totalYes = TIERS.reduce((sum, tier) => sum + scoreForTier(tier).yes, 0);
+  const totalApplicable = TIERS.reduce((sum, tier) => sum + scoreForTier(tier).applicable, 0);
+  let bannerText, bannerClass;
+  if (totalApplicable === 0) {
+    bannerText = "Fill in the checklist to see a summary here.";
+    bannerClass = "tier-none";
+  } else if (reached && reached.id === "professional") {
+    bannerText = "Outstanding — meets all Professional criteria.";
+    bannerClass = reached.colorClass;
+  } else if (reached && reached.id === "advanced") {
+    bannerText = `Solid Advanced-tier software. ${totalYes} of ${totalApplicable} applicable indicators confirmed.`;
+    bannerClass = reached.colorClass;
+  } else if (reached && reached.id === "essential") {
+    bannerText = `Essential criteria all met. ${totalYes} of ${totalApplicable} applicable indicators confirmed.`;
+    bannerClass = reached.colorClass;
+  } else {
+    // Some progress but Essential not fully met yet — focus on what's done
+    bannerText = `${totalYes} of ${totalApplicable} applicable indicators confirmed. Keep going!`;
+    bannerClass = "tier-none";
+  }
+  html += `<div class="reach-banner ${bannerClass}" style="margin-bottom:0">${bannerText}</div>`;
+
+  html += `<div class="report-score-grid">`;
+  TIERS.forEach(tier => {
+    const s = scoreForTier(tier);
+    const pct = s.applicable > 0 ? Math.round(s.yes / s.applicable * 100) : 0;
+    const colors = { essential: "var(--teal)", advanced: "var(--blue)", professional: "var(--amber)" };
+    html += `<div class="rsc">
+      <div class="rsc-label">${tier.label}</div>
+      <div class="rsc-pct" style="color:${colors[tier.id]}">${pct}%</div>
+      <div class="rsc-sub">${s.yes} of ${s.applicable} applicable</div>
+    </div>`;
+  });
+  html += `</div>`;
+
+  if (state.meta.notes) {
+    html += `<div style="margin-top:12px;font-size:13px;color:var(--text2);font-style:italic">${esc(state.meta.notes)}</div>`;
+  }
+  html += `</div>`; // /report-hero
+
+  // Per-tier sections with category aggregation
+  TIERS.forEach(tier => {
+    html += `<div style="margin-bottom:8px">
+      <div style="display:flex;align-items:center;gap:8px;padding:10px 0 6px">
+        <span class="tier-badge ${tier.colorClass}">${tier.label}</span>
+        <span style="font-size:13px;color:var(--text2)">${tier.description}</span>
+      </div>`;
+
+    tier.groups.forEach(group => {
+      const items = group.items;
+      const applicable = items.filter(i => { const r=state.responses[i.id]; return !r||r.status!=="na"; });
+      const yes = applicable.filter(i => state.responses[i.id] && state.responses[i.id].status === "yes");
+      const no  = applicable.filter(i => state.responses[i.id] && state.responses[i.id].status === "no");
+      const pct = applicable.length > 0 ? Math.round(yes.length / applicable.length * 100) : 0;
+
+      const fillColors = { essential: "var(--teal)", advanced: "var(--blue)", professional: "var(--amber)" };
+      const domId = `rep-${tier.id}-${group.label.replace(/\W+/g,"_")}`;
+
+      html += `<div class="report-section">
+        <button class="rep-cat-toggle" id="rct-${domId}" aria-expanded="false" onclick="toggleRepCat('${domId}')">
+          <span class="rct-name">${group.label}</span>
+          <div class="rct-bar"><div class="rct-fill" style="width:${pct}%;background:${fillColors[tier.id]}"></div></div>
+          <span class="rct-score">${yes.length}/${applicable.length}</span>
+          <span class="rct-arrow">▼</span>
+        </button>
+        <div class="rep-cat-body" id="rcb-${domId}">`;
+
+      items.forEach(item => {
+        const r = state.responses[item.id] || {};
+        const status = r.status || null;
+        const pillClass = status === "yes" ? "rip-yes" : status === "no" ? "rip-no" : status === "na" ? "rip-na" : "rip-open";
+        const pillText  = status === "yes" ? "yes" : status === "no" ? "no" : status === "na" ? "n/a" : "–";
+        html += `<div class="rep-ind">
+          <span class="ri-pill ${pillClass}">${pillText}</span>
+          <span>${item.label}${item.nlesc ? '<span class="nlesc-tag">NLeSC</span>' : ''}
+            ${r.note ? `<span class="ri-note-text">${esc(r.note)}</span>` : ""}
+          </span>
+        </div>`;
+      });
+
+      html += `</div></div>`;
+    });
+
+    html += `</div>`;
+  });
+
+  document.getElementById("report-content").innerHTML = html;
+}
+
+function toggleRepCat(id) {
+  const btn = document.getElementById("rct-" + id);
+  const body = document.getElementById("rcb-" + id);
+  const expanded = btn.getAttribute("aria-expanded") === "true";
+  btn.setAttribute("aria-expanded", String(!expanded));
+  body.classList.toggle("open", !expanded);
+}
+
+// ─────────────────────────────────────────────
+//  JSON
+// ─────────────────────────────────────────────
+
+function buildAssessmentJSON() {
+  const data = {
+    "@context": "https://w3id.org/software-quality-assessment/1.0",
+    "@type": "SoftwareQualityAssessment",
+    softwareName: state.meta.name,
+    softwareVersion: state.meta.version,
+    repositoryUrl: state.meta.repo,
+    assessedBy: state.meta.assessor,
+    dateAssessed: state.meta.date,
+    assessorNotes: state.meta.notes,
+    reachesTier: computeReachLevel() ? computeReachLevel().id : null,
+    indicators: {}
+  };
+  TIERS.forEach(tier => {
+    data.indicators[tier.id] = {};
+    getItems(tier).forEach(item => {
+      const r = state.responses[item.id] || {};
+      data.indicators[tier.id][item.id] = { status: r.status || null, note: r.note || "" };
+    });
+  });
+  return JSON.stringify(data, null, 2);
+}
+
+function refreshJSON() {
+  document.getElementById("json-out").value = buildAssessmentJSON();
+}
+
+function downloadJSON() {
+  const json = buildAssessmentJSON();
+  const blob = new Blob([json], { type: "application/json" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  const slug = (state.meta.name || "software").replace(/\s+/g, "_").toLowerCase();
+  a.download = `sqa-${slug}-${state.meta.date || "assessment"}.json`;
+  a.click();
+  toast("JSON downloaded");
+}
+
+function copyJSON() {
+  const el = document.getElementById("json-out");
+  el.select();
+  document.execCommand("copy");
+  toast("Copied to clipboard");
+}
+
+function handleFileUpload(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => loadJSON(e.target.result);
+  reader.onerror = () => toast("Could not read file");
+  reader.readAsText(file);
+  input.value = ""; // reset so same file can be re-loaded
+}
+
+function loadJSON(jsonStr) {
+  if (!jsonStr.trim()) { toast("Paste a JSON first"); return; }
+  try {
+    const data = JSON.parse(jsonStr);
+    // Load meta
+    state.meta.name      = data.softwareName || "";
+    state.meta.version   = data.softwareVersion || "";
+    state.meta.repo      = data.repositoryUrl || "";
+    state.meta.assessor  = data.assessedBy || "";
+    state.meta.date      = data.dateAssessed || "";
+    state.meta.notes     = data.assessorNotes || "";
+
+    // Update meta inputs
+    ["name","version","repo","assessor","date","notes"].forEach(k => {
+      const el = document.getElementById("m-" + k);
+      if (el) el.value = state.meta[k];
+    });
+
+    // Load responses
+    state.responses = {};
+    if (data.indicators) {
+      TIERS.forEach(tier => {
+        if (data.indicators[tier.id]) {
+          Object.entries(data.indicators[tier.id]).forEach(([id, val]) => {
+            state.responses[id] = { status: val.status, note: val.note || "" };
+          });
+        }
+      });
+    }
+
+    // Refresh all toggles
+    TIERS.forEach(tier => {
+      getItems(tier).forEach(item => {
+        refreshToggleRow(item.id);
+        const noteInput = document.getElementById("note-" + item.id);
+        if (noteInput && state.responses[item.id]) noteInput.value = state.responses[item.id].note || "";
+      });
+    });
+
+    refreshProgress();
+    refreshJSON();
+    showTab("report");
+    toast("Assessment loaded");
+  } catch(e) {
+    toast("Could not parse JSON: " + e.message);
+  }
+}
+
+// ─────────────────────────────────────────────
+//  TABS
+// ─────────────────────────────────────────────
+
+function showTab(id) {
+  document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+  document.querySelectorAll(".panel").forEach(p => p.classList.remove("active"));
+  document.getElementById("tab-" + id).classList.add("active");
+  document.getElementById("panel-" + id).classList.add("active");
+  if (id === "report") buildReport();
+  if (id === "json")   refreshJSON();
+}
+
+// ─────────────────────────────────────────────
+//  UTILS
+// ─────────────────────────────────────────────
+
+function esc(str) {
+  if (!str) return "";
+  return String(str)
+    .replace(/&/g,"&amp;").replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+}
+
+let toastTimer;
+function toast(msg) {
+  const el = document.getElementById("toast");
+  el.textContent = msg;
+  el.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove("show"), 2200);
+}
+
+// ─────────────────────────────────────────────
+//  INIT
+// ─────────────────────────────────────────────
+
+buildChecklist();
+refreshProgress();
+</script>
+</body>
+</html>
