@@ -1,7 +1,6 @@
 # Software health check
 
-This health check is meant to quickly scan a research software repository. It is not meant as an exhaustive audit report or evaluation tool, 
-but it may serve as the basis for a conversation about various aspects of software sustainability.
+This health check is meant to quickly scan a research software repository and get an initial impression of the overall state of the software. It is not meant as an exhaustive audit report or evaluation tool, but it may serve as the basis for a conversation about various aspects of software sustainability.
 
 **Name of the software**: ___________
 
@@ -35,7 +34,7 @@ _Suggestions: Research Software Directory, bio.tools, package index, paper refer
 _Can someone use this software without help from the authors?_
 
 **How does a new user get started?**
-_Suggestions: installation guide, README, worked example_
+_Suggestions: installation guide, README, examples_
 
 &nbsp;
 
@@ -49,7 +48,7 @@ _Suggestions: user guide, tutorial, assumed prior knowledge stated_
 &nbsp;
 
 **How do users get help when they are stuck, and how is that scaled as the user base grows?**
-_Suggestions: issue tracker; for more advanced software: forum, mailing list, community channel, documented response expectations_
+_Suggestions: contact info, discussion forum, issue tracker; for more advanced software: mailing list, community channel, documented response expectations_
 
 &nbsp;
 
@@ -66,8 +65,15 @@ _Suggestions: test suite, reference outputs, validation against known results, d
 
 &nbsp;
 
+**How are users informed about changes of the software?**
+_Suggestions: changelog, version tags_
+
+&nbsp;
+
+&nbsp;
+
 **How is correctness maintained as the software evolves?**
-_Suggestions: changelog, version tags; for more active development: CI pipeline, automated tests on every commit, branch protection_
+_Suggestions: for more active development: CI pipeline, automated tests on every commit, branch protection_
 
 &nbsp;
 
@@ -85,7 +91,7 @@ _Suggestions: no leaked credentials in history; for software with external expos
 _Can someone other than the original author understand and modify this code?_
 
 **Could a new contributor navigate this codebase without asking the authors?**
-_Suggestions: logical file structure, meaningful naming, code comments where reasoning is non-obvious, architecture notes_
+_Suggestions: logical file structure, meaningful naming, code comments where reasoning is non-obvious, developer documentation, architecture notes_
 
 &nbsp;
 
@@ -117,14 +123,14 @@ _Suggestions: OSI-approved licence file, dependency licence compatibility_
 &nbsp;
 
 **Who maintains this software, and how can others get involved?**
-_Suggestions: named maintainers; for software seeking contributors: CONTRIBUTING.md, code of conduct, open governance model_
+_Suggestions: named maintainers, authors.md, citation.cff; for software seeking contributors: CONTRIBUTING.md, code of conduct, open governance model_
 
 &nbsp;
 
 &nbsp;
 
 **What happens to this software when the current project or grant ends?**
-_Most relevant for software with an established user base. Suggestions: institutional backing, roadmap, handover plan, bus factor assessment_
+_Most relevant for software with an established user base. Suggestions: institutional backing, roadmap, handover plan, bus factor assessment, end of life policy_
 
 &nbsp;
 
